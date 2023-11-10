@@ -1,6 +1,8 @@
-require_relative "boot"
+# frozen_string_literal: true
 
-require "rails/all"
+require_relative 'boot'
+
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -14,9 +16,9 @@ module Sequra
     Bundler.require(*Rails.groups)
 
     # Load dotenv only in development or test environment
-    Dotenv::Railtie.load if ['development', 'test'].include? ENV['RAILS_ENV']
+    Dotenv::Railtie.load if %w[development test].include? ENV['RAILS_ENV']
 
-    HOSTNAME = ENV['HOSTNAME']
+    HOSTNAME = ENV.fetch('HOSTNAME', nil)
 
     # Configuration for the application, engines, and railties goes here.
     #
