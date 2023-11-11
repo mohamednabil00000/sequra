@@ -10,4 +10,8 @@ RSpec.describe Merchant, type: :model do
     it { should allow_value('user@example.com').for(:email) }
     it { should validate_inclusion_of(:disbursement_frequency).in_array(%i[DAILY WEEKLY]) }
   end
+
+  describe 'associations' do
+    it { is_expected.to have_many(:orders).with_foreign_key(:merchant_reference).with_primary_key(:reference) }
+  end
 end
