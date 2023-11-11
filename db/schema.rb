@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_231_110_230_608) do
+ActiveRecord::Schema[7.0].define(version: 20_231_111_221_128) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
@@ -25,5 +25,16 @@ ActiveRecord::Schema[7.0].define(version: 20_231_110_230_608) do
     t.float 'minimum_monthly_fee', default: 0.0
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.index ['reference'], name: 'index_merchants_on_reference', unique: true
   end
+
+  create_table 'orders', id: :string, force: :cascade do |t|
+    t.string 'merchant_reference'
+    t.float 'amount', default: 0.0
+    t.float 'commission', default: 0.0
+    t.date 'created_at'
+    t.datetime 'updated_at'
+  end
+
+  add_foreign_key 'orders', 'merchants', column: 'merchant_reference', primary_key: 'reference'
 end
