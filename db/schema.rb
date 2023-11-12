@@ -12,10 +12,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_231_111_221_128) do
+ActiveRecord::Schema[7.0].define(version: 20_231_112_183_234) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
+
+  create_table 'merchant_disbursements', force: :cascade do |t|
+    t.uuid 'merchant_id'
+    t.float 'disbursements', default: 0.0
+    t.date 'created_at'
+    t.datetime 'updated_at'
+    t.index %w[merchant_id created_at], name: 'index_merchant_disbursements_on_merchant_id_and_created_at',
+                                        unique: true
+    t.index ['merchant_id'], name: 'merchant_index_1'
+  end
 
   create_table 'merchants', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
     t.string 'reference'
@@ -25,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 20_231_111_221_128) do
     t.float 'minimum_monthly_fee', default: 0.0
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
+    t.string 'live_on_weekday'
     t.index ['reference'], name: 'index_merchants_on_reference', unique: true
   end
 
@@ -34,6 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 20_231_111_221_128) do
     t.float 'commission', default: 0.0
     t.date 'created_at'
     t.datetime 'updated_at'
+    t.index ['merchant_reference'], name: 'index_orders_on_merchant_reference'
   end
 
   add_foreign_key 'orders', 'merchants', column: 'merchant_reference', primary_key: 'reference'

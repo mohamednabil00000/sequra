@@ -4,6 +4,12 @@ AllCops:
     - 'bin/bundle'
     - 'node_modules/**/*'
     - 'vendor/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/**/**/*.rb'
+    - 'db/schema.rb'
+
 Metrics/MethodLength:
   Max: 10
 Metrics/AbcSize:

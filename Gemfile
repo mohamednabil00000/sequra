@@ -38,6 +38,7 @@ gem 'redis', '~> 4.0'
 # Use for localization
 gem 'rails-i18n'
 
+gem 'whenever', require: false
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
