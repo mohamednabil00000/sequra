@@ -25,6 +25,7 @@ RSpec.describe Merchant, type: :model do
         expect(described_class.daily_merchants.pluck(:email)).to match_array [merchant1.email, merchant2.email]
       end
     end
+
     describe '#weekly_merchants' do
       it 'returns third merchant' do
         expect(described_class.weekly_merchants.pluck(:email)).to match_array [merchant3.email]
@@ -51,11 +52,12 @@ RSpec.describe Merchant, type: :model do
       end
     end
 
-    describe '#orders_of_prev_month' do
+    describe '#orders_of_given_month' do
       include_context 'group of orders in prev month'
 
       it 'returns three orders' do
-        result = described_class.have_orders_of_prev_month
+        result = described_class.have_orders_of_given_month(Time.now.beginning_of_month - 1.month,
+                                                            Time.now.beginning_of_month - 1)
         expect(result.size).to eq 3
         expect(result.pluck('orders.id')).to match_array [order1.id, order2.id, order3.id]
       end
@@ -65,7 +67,8 @@ RSpec.describe Merchant, type: :model do
       include_context 'group of orders in prev month'
 
       it 'returns first merchant' do
-        result = described_class.have_orders_of_prev_month.aggregate_fees
+        result = described_class.have_orders_of_given_month(Time.now.beginning_of_month - 1.month,
+                                                            Time.now.beginning_of_month - 1).aggregate_fees
         charged_fees_arr = result.map { |row| row.slice(:merchant_id, :amount_charged) }
         expect(charged_fees_arr).to match_array([
                                                   { merchant_id: merchant1.id, amount_charged: 300.0 }
@@ -73,13 +76,14 @@ RSpec.describe Merchant, type: :model do
       end
     end
 
-    describe '#aggregate_fees_for_merchants_do_not_have_orders_prev_month' do
+    describe '#aggregate_fees_for_merchants_do_not_have_orders' do
       include_context 'group of orders in prev month'
 
       it 'returns third merchant' do
-        merchants_have_orders = described_class.have_orders_of_prev_month
+        merchants_have_orders = described_class.have_orders_of_given_month(Time.now.beginning_of_month - 1.month,
+                                                                           Time.now.beginning_of_month - 1)
         merchants_ids = merchants_have_orders.pluck(:id)
-        result = described_class.aggregate_fees_for_merchants_do_not_have_orders_prev_month(merchants_ids)
+        result = described_class.aggregate_fees_for_merchants_do_not_have_orders(merchants_ids)
         charged_fees_arr = result.map { |row| row.slice(:merchant_id, :amount_charged) }
         expect(charged_fees_arr).to match_array([
                                                   { merchant_id: merchant3.id, amount_charged: 200.0 }

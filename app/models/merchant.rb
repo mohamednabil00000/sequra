@@ -19,13 +19,14 @@ class Merchant < ApplicationRecord
             .group('merchants.id')
             .select('merchants.id as merchant_id, round(COALESCE(sum(orders.amount), 0)::numeric, 2) as disbursements')
         }
-  scope :have_orders_of_prev_month,
-        lambda {
+
+  scope :have_orders_of_given_month,
+        lambda { |start_date, end_date|
           left_outer_joins(:orders).where('orders.created_at BETWEEN ? AND ?',
-                                          Time.now.beginning_of_month - 1.month, Time.now.beginning_of_month)
+                                          start_date, end_date)
         }
 
-  scope :aggregate_fees_for_merchants_do_not_have_orders_prev_month,
+  scope :aggregate_fees_for_merchants_do_not_have_orders,
         lambda { |merchants_ids|
           where.not(id: merchants_ids).select('id as merchant_id, minimum_monthly_fee as amount_charged')
         }
