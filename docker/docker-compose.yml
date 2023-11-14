@@ -1,0 +1,29 @@
+version: "3.5"
+services:
+ db:
+   image: postgres
+   environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+   env_file:
+      - ../.env
+   volumes:
+      - PGDATA=/var/lib/postgresql/sequra/data/db-files/
+
+ app:
+   depends_on:
+      - db
+   build:
+    context: ..
+    dockerfile: ./docker/Dockerfile
+   ports:
+      - "3000:3000"
+   environment:
+     DB_HOST: db
+   env_file:
+      - ../.env
+   volumes:
+      - "../.:/app"
+
+volumes:
+ db:
