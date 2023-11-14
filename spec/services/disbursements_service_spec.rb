@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe DisbursementsService do
-  let(:subject) { described_class.new }
+  let(:subject) { described_class }
   describe '#calc_disbursements_for_merchants!' do
     context 'when we have records' do
       include_context 'group of merchants'

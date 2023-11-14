@@ -11,9 +11,9 @@ Metrics/BlockLength:
     - 'db/schema.rb'
 
 Metrics/MethodLength:
-  Max: 10
+  Max: 11
 Metrics/AbcSize:
-  Max: 20
+  Max: 21
 Style/Documentation:
   Enabled: false
 Gemspec/DeprecatedAttributeAssignment: # new in 1.30

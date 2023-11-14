@@ -12,10 +12,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_231_112_183_234) do
+ActiveRecord::Schema[7.0].define(version: 20_231_113_144_924) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
+
+  create_table 'charged_monthly_fees', force: :cascade do |t|
+    t.uuid 'merchant_id'
+    t.float 'amount_charged', default: 0.0
+    t.integer 'month'
+    t.integer 'year'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index %w[merchant_id month year], name: 'index_charged_monthly_fees_on_merchant_id_and_month_and_year',
+                                        unique: true
+    t.index ['merchant_id'], name: 'merchant_index_2'
+  end
 
   create_table 'merchant_disbursements', force: :cascade do |t|
     t.uuid 'merchant_id'
@@ -45,6 +57,7 @@ ActiveRecord::Schema[7.0].define(version: 20_231_112_183_234) do
     t.float 'commission', default: 0.0
     t.date 'created_at'
     t.datetime 'updated_at'
+    t.index ['created_at'], name: 'index_orders_on_created_at'
     t.index ['merchant_reference'], name: 'index_orders_on_merchant_reference'
   end
 
