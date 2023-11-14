@@ -17,6 +17,11 @@ namespace :merchants do
 
   desc 'disbursements calculations for merchants either daily or weekly'
   task disbursements_calculations: :environment do
-    DisbursementsService.new.calc_disbursements_for_merchants!
+    DisbursementsService.calc_disbursements_for_merchants!
+  end
+
+  desc 'calculate minimum monthly fees'
+  task minimum_monthly_fees_calculations: :environment do
+    FeesService.charging_minimum_monthly_fees_for_prev_month!
   end
 end

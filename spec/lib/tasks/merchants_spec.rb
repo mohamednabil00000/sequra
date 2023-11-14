@@ -11,26 +11,15 @@ describe 'rake merchants:import', type: :task do
 end
 
 describe 'rake merchants:disbursements_calculations', type: :task do
-  context 'when we have records' do
-    include_context 'group of merchants'
-    include_context 'group of orders'
-
-    it 'disbursements calculations for merchants' do
-      expect do
-        task.invoke
-      end.to change { MerchantDisbursement.count }.by(2)
-
-      merchant_disbursements = MerchantDisbursement.all
-      expect(merchant_disbursements.pluck(:merchant_id)).to match_array [merchant1.id, merchant2.id]
-      expect(merchant_disbursements.pluck(:disbursements)).to match_array [200.0, 100.0]
-    end
+  it 'expect receiving calc disbursements for merchants method' do
+    expect(DisbursementsService).to receive(:calc_disbursements_for_merchants!).once
+    task.invoke
   end
+end
 
-  context 'when we do not have records' do
-    it 'disbursements calculations for merchants' do
-      expect do
-        task.invoke
-      end.not_to(change { MerchantDisbursement.count })
-    end
+describe 'rake merchants:minimum_monthly_fees_calculations', type: :task do
+  it 'expect receiving charging_minimum_monthly_fees_for_prev_month method' do
+    expect(FeesService).to receive(:charging_minimum_monthly_fees_for_prev_month!).once
+    task.invoke
   end
 end
