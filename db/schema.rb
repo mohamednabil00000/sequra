@@ -12,14 +12,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_231_113_144_924) do
+
+ActiveRecord::Schema[7.0].define(version: 20_231_121_115_654) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
 
   create_table 'charged_monthly_fees', force: :cascade do |t|
     t.uuid 'merchant_id'
-    t.float 'amount_charged', default: 0.0
+    t.decimal 'amount_charged', default: '0.0'
     t.integer 'month'
     t.integer 'year'
     t.datetime 'created_at', null: false
@@ -31,7 +32,7 @@ ActiveRecord::Schema[7.0].define(version: 20_231_113_144_924) do
 
   create_table 'merchant_disbursements', force: :cascade do |t|
     t.uuid 'merchant_id'
-    t.float 'disbursements', default: 0.0
+    t.decimal 'disbursements', default: '0.0'
     t.date 'created_at'
     t.datetime 'updated_at'
     t.index %w[merchant_id created_at], name: 'index_merchant_disbursements_on_merchant_id_and_created_at',
@@ -53,8 +54,8 @@ ActiveRecord::Schema[7.0].define(version: 20_231_113_144_924) do
 
   create_table 'orders', id: :string, force: :cascade do |t|
     t.string 'merchant_reference'
-    t.float 'amount', default: 0.0
-    t.float 'commission', default: 0.0
+    t.decimal 'amount', default: '0.0'
+    t.decimal 'commission', default: '0.0'
     t.date 'created_at'
     t.datetime 'updated_at'
     t.index ['created_at'], name: 'index_orders_on_created_at'
